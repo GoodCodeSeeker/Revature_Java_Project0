@@ -14,7 +14,7 @@ import project.models.Account;
 public class AccountService {
 	
 	// Let's inject our DAO to the service
-	private IAccountDao adao = new AccountDao();
+	public IAccountDao adao = new AccountDao();
 	
 	// Lets make a logger here
 	//Logger logger = Logger.getLogger(AccountService.class);
@@ -34,7 +34,6 @@ public class AccountService {
 		for (Account a: accList) {
 			System.out.println(a);
 		}
-		
 	}
 	
 	public boolean validateAccountId(int id, int ownerId) {
@@ -95,6 +94,18 @@ public class AccountService {
 		}
 	}
 	
+	public void accountToggle(int id, boolean choice) {
+		if (choice == true) {
+			adao.updateToActive(id);
+		}else {
+			adao.updateToInactive(id);
+		}
+	}
+	
+	public void deleteAccount(int id) {
+		adao.delete(id);
+	}
+
 	public boolean isOpValid(int id, double money) {
 		Account a = adao.findById(id);
 		return (money < a.getBalance() && money > 0)? true: false;

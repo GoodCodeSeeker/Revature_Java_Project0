@@ -2,9 +2,11 @@ package project;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 import project.dao.UserDao;
+import project.models.Account;
 import project.models.Role;
 	import project.models.User;
 	import project.service.AccountService;
@@ -12,7 +14,7 @@ import project.models.Role;
 import project.util.ConnectionUtil;
 
 	public class App {
-		
+	
 		static Scanner scan = new Scanner(System.in);
 		public static boolean canApply = false;
 		public static void main(String[] args) {
@@ -101,8 +103,6 @@ import project.util.ConnectionUtil;
 				u = new User(username, password, Role.Admin, null);
 				us.register(u);
 				adminMenu(u);
-				
-				
 				}
 				}else
 					System.out.println("You enter the wrong input.");
@@ -119,28 +119,41 @@ import project.util.ConnectionUtil;
 
 	public static void cusMenu(User u) {
 		AccountService as = new AccountService();
-		System.out.println("You can do customer banking: deposit, withdraw, and transfer your accounts");
+		String continueFlag="";
+		Scanner scan = new Scanner(System.in);
+		int accNum = -1;
 		int choice1 = 0;
+		do {
+		System.out.println("You can do customer banking: deposit, withdraw, and transfer your accounts");
 		System.out.println("Press 1 to view your accounts."
 				+ "\nPress 2 to make an account."
 				+ "\nPress 3 to do customer banking"
 				+ "\nPress 4 to log out.");
-		Scanner scan = new Scanner(System.in);
 		choice1 = scan.nextInt();
 		switch (choice1) {
 			case 1: System.out.println("You can view accounts that you own.");
 			int input = u.getId();
 			as.viewAccountsById(input);
+			System.out.println("Press 1 to continue, other key to exit.");
+			continueFlag = scan.next();
 			break;
-			case 2: System.out.println("You can make an account");
+			case 2: 
+			if (canApply == true) {	
+			System.out.println("You can make an account");
 			as.makeAccount(u.getId());
+			}else {
+				System.out.println("The account apply status is close. You cannot open an account.");
+			}
+			System.out.println("Press 1 to continue, other key to exit.");
+			continueFlag = scan.next();
 			break;
 			case 3: System.out.println("If you have an active account, you can do customer banking");
 			as.showCusBanking(u.getId());
 			if (as.showCusBanking(u.getId()) == true) {
-				int accNum = -1;
 				int choice2 = 0;
+
 				do {
+				
 				System.out.println("Choose the account id to do banking");
 				accNum = scan.nextInt();
 				if (as.validateAccountId(accNum, u.getId()) == true) {
@@ -157,12 +170,16 @@ import project.util.ConnectionUtil;
 				amount = scan.nextDouble();
 				System.out.println("Depositing $" + amount);
 				as.depositService(accNum, amount);
+				System.out.println("Press 1 to continue, other key to exit.");
+				continueFlag = scan.next();
 				break;
 				case 2:
 				System.out.println("Enter the amount:");
 				amount = scan.nextDouble();
 				System.out.println("Withdrawing $" + amount);
 				as.withdrawService(accNum, amount);
+				System.out.println("Press 1 to continue, other key to exit.");
+				continueFlag = scan.next();
 				break;
 				case 3:
 				do {
@@ -173,6 +190,8 @@ import project.util.ConnectionUtil;
 				amount = scan.nextDouble();
 				System.out.println("Transfer $" + amount + " to account "+ tar);
 				as.transferService(accNum, tar, amount);
+				System.out.println("Press 1 to continue, other key to exit.");
+				continueFlag = scan.next();
 				}else {
 				System.out.println("Entered the wrong account id.");
 				}
@@ -189,12 +208,18 @@ import project.util.ConnectionUtil;
 			
 			break;
 		}
+		} while (continueFlag.equals("1"));
 		scan.close();
 	}
 	
 	
 	public static void emplMenu(User u) {
-		System.out.println("You can view customers info and their account balance.");
+		AccountService as = new AccountService();
+		UserService us = new UserService();
+		int canApplyToggle = -1;
+		String continueFlag = "";
+		do {
+		System.out.println("You are bank employee. You can view customers info and their account balance.");
 		int choice1 = 0;
 		System.out.println("Press 1 to view all customer accounts."
 				+ "Press 2 to view all customer info."
@@ -203,26 +228,47 @@ import project.util.ConnectionUtil;
 		choice1 = scan.nextInt();
 		switch (choice1) {
 		case 1: System.out.println("You can view all customer accounts.");
+			as.viewAllAccounts();
+			System.out.println("Press 1 to continue, other key to exit.");
+			continueFlag = scan.next();
 		break;
 		case 2: System.out.println("You can view all customer info.");
+		us.viewAllCustomers();
+		System.out.println("Press 1 to continue, other key to exit.");
+		continueFlag = scan.next();
 		break;
-		case 3: System.out.println("You can approve or deny open application for accounts.");
+		case 3: System.out.println("You can approve or deny open application for accounts. Press 0 to deny. 1 to open");
+			canApplyToggle = scan.nextInt();
+			
+			if (canApplyToggle == 0) canApply = false;
+			else {
+				canApply = true;
+			}
+			System.out.println("Press 1 to continue, other key to exit.");
+			continueFlag = scan.next();
 		break;
 		case 4: System.out.println("You can log out.");
+		System.exit(0);
 		break;
 	}
+	} while (continueFlag.equals("1"));
+		
 	}
 	
 	public static void adminMenu(User u) {
 		AccountService as = new AccountService();
 		UserService us = new UserService();
-		System.out.println("You can view customer info and account balance. "
+		String continueFlag = "";
+		do {
+		System.out.println("You are bank admin.\nYou can view customer info and account balance. "
 				+ "\nYou can also do banking on all customers, and cancel accounts.");
 		int choice1 = 0;
 		int choice2 = 0;
+		int choice3 = 0;
 		int accNum = -1;
 		int tar = -1;
 		double amount = 0;
+		
 		System.out.println("Press 1 to view all accounts."
 				+ "Press 2 to view all customers."
 				+ "Press 3 to do banking on customers."
@@ -233,9 +279,13 @@ import project.util.ConnectionUtil;
 		switch (choice1) {
 		case 1: System.out.println("You can view all customer accounts.");
 		as.viewAllAccounts();
+		System.out.println("Press 1 to continue, other key to exit.");
+		continueFlag = scan.next();
 		break;
 		case 2: System.out.println("You can view all customers.");
 		us.viewAllCustomers();
+		System.out.println("Press 1 to continue, other key to exit.");
+		continueFlag = scan.next();
 		break;
 		case 3: System.out.println("You can do banking on customers.");
 		System.out.println("Enter the avaliable bank account id to do banking.");
@@ -250,18 +300,47 @@ import project.util.ConnectionUtil;
 		amount = scan.nextDouble();
 		
 		switch(choice2) {
-		case 1: as.depositService(accNum, amount); break;
-		case 2: as.withdrawService(accNum, amount); break;
+		case 1: as.depositService(accNum, amount); 
+		System.out.println("Press 1 to continue, other key to exit.");
+		continueFlag = scan.next();
+		break;
+		case 2: as.withdrawService(accNum, amount); 
+		System.out.println("Press 1 to continue, other key to exit.");
+		continueFlag = scan.next();
+		break;
 		case 3: as.transferService(accNum, tar, amount);
 		}
 		break;
 		case 4: System.out.println("You can approve or deny account.");
+		System.out.println("Enter account id");
+		accNum = scan.nextInt();
+		System.out.println("Press 1 to continue, other key to exit.");
+		continueFlag = scan.next();
+		System.out.println("Approve or deny the account:");
+		choice3 = scan.nextInt();
+		if (choice3 == 1) {
+			System.out.println("Approving account.");
+			as.accountToggle(accNum, true);
+		} else if (choice3 == 2) {
+			System.out.println("Denying account.");
+			as.accountToggle(accNum, false);
+		}
+		System.out.println("Press 1 to continue, other key to exit.");
+		continueFlag = scan.next();
 		break;
 		case 5: System.out.println("You can cancel account.");
+		System.out.println("Enter account id");
+		accNum = scan.nextInt();
+		as.deleteAccount(accNum);
+		System.out.println("Press 1 to continue, other key to exit.");
+		continueFlag = scan.next();
 		break;
 		case 6: System.out.println("You can log out.");
+		System.exit(0);
 		break;
 	}
+		
+	} while (continueFlag.equals("1"));
 		
 	}
 	}

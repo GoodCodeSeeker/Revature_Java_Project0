@@ -25,7 +25,10 @@ public interface IAccountDao {
 	public void updateAddBalance(int id, double money);
 	public void updateSubBalance(int id, double money);
 	public void updateTransferBalance(int s_id, int t_id, double money);
+	public void updateToActive(int id);
+	public void updateToInactive(int id);
 	// Delete
 	
 	//boolean delete(Account a);
+	void delete(int id);
 }

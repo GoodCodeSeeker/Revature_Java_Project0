@@ -168,7 +168,7 @@ public class AccountDao implements IAccountDao{
 		// If the account id belongs to the owner and the account is active, the account is valid for banking use.
 	try (Connection conn = ConnectionUtil.getConnection()){
 		
-		String sql = "SELECT * FROM users WHERE id = ?";
+		String sql = "SELECT * FROM accounts WHERE id = ?";
 		
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		
@@ -199,24 +199,24 @@ public class AccountDao implements IAccountDao{
 	return false;
 	}
 
-	public void updateToActive(int accOwnerId) {
+	public void updateToActive(int id) {
 		
 		try (Connection conn = ConnectionUtil.getConnection()){
-		String sql = "update accounts set active = true acc_owner = ?;";
+		String sql = "update accounts set active = true id = ?;";
 		PreparedStatement stmt = conn.prepareStatement(sql);
-		stmt.setInt(1, accOwnerId);
+		stmt.setInt(1, id);
 		} catch (SQLException e) {
 			System.out.println("Unable to retrieve accounts due to SQL Exception");
 			e.printStackTrace();
 		}
 	}
 	
-	public void updateToInactive(int accOwnerId) {
+	public void updateToInactive(int id) {
 		
 		try (Connection conn = ConnectionUtil.getConnection()){
-		String sql = "update accounts set active = false acc_owner = ?;";
+		String sql = "update accounts set active = false id = ?;";
 		PreparedStatement stmt = conn.prepareStatement(sql);
-		stmt.setInt(1, accOwnerId);
+		stmt.setInt(1, id);
 		} catch (SQLException e) {
 			System.out.println("Unable to retrieve accounts due to SQL Exception");
 			e.printStackTrace();
@@ -273,7 +273,7 @@ public class AccountDao implements IAccountDao{
 		return false;
 	}
 	
-	public void Delete(int id) {
+	public void delete(int id) {
 		try (Connection conn = ConnectionUtil.getConnection()){
 		
 		String sql = "delete from user_account_jt where account = ?";
