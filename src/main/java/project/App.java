@@ -71,9 +71,17 @@ import project.util.ConnectionUtil;
 				} else cusMenu(loggedInUser);
 				
 			} else if (input == 2) {
-				
+				String username;
+				boolean duplicate = false;
+				do {
 				System.out.println("Please enter a username");
-				String username = scan.next();
+				username = scan.next();
+				duplicate = us.checkUsername(username);
+				 if (duplicate == true) 
+					System.out.println("The username already exists, get another one");
+				 else
+					System.out.println("The username is not in the database yet."); 
+				} while (duplicate == true);
 				
 				System.out.println("Please enter a secure password");
 				String password = scan.next();
@@ -156,6 +164,7 @@ import project.util.ConnectionUtil;
 				
 				System.out.println("Choose the account id to do banking");
 				accNum = scan.nextInt();
+				as.validateAccountId(accNum, u.getId());
 				if (as.validateAccountId(accNum, u.getId()) == true) {
 				as.viewAccountsById(accNum);
 				System.out.println("Press 1 to Deposit."

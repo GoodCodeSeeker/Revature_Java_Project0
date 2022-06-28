@@ -1,22 +1,21 @@
 package project.service;
 
 import java.util.List;
-import java.util.Scanner;
-
 import project.dao.IUserDao;
 import project.dao.UserDao;
 import project.exceptions.RegisterUserFailedException;
-import project.models.Account;
-import project.models.Role;
 import project.models.User;
+import org.apache.log4j.Logger;
+
 
 public class UserService {
 	
 	// Dependency Injection
 	public IUserDao udao = new UserDao();
+	Logger logger = Logger.getLogger(UserService.class);
 	
 	public User register(User u) {
-		
+		logger.info("Registering user.");
 		System.out.println("Registering user....");
 		
 		// Let's make sure the registering user has an id of 0 before trying to register
@@ -54,7 +53,7 @@ public class UserService {
 		// Check to see if returned password matches the entered password
 		
 		if (returnedUser.getPassword().equals(password)) {
-			
+			logger.info("logged in.");
 			System.out.println("Successfully Logged in!");
 			
 			System.out.println("Reached the inside of the if statement");
@@ -67,17 +66,19 @@ public class UserService {
 	
 	public void viewAllCustomers() {
 		List<User> uList = udao.findAllCustomer();
-		
+		logger.info("View all customers.");
 		for (User u: uList) {
 			System.out.println(u);
 		}
 	}
 	
-	public void checkUsername(String username) {
+	public boolean checkUsername(String username) {
 		if (udao.isUsernameExists(username)) {
-			System.out.println("The username already exists, get another one");
+			logger.info("The username: " + username + " already exists in the database");
+			return true;
 		}else {
-			System.out.println("The username is not in the database yet.");
+			logger.info("The username: " + username + " is not in database");
+			return false;
 		}
 	}
 	
