@@ -117,7 +117,7 @@ public class UserDao implements IUserDao{
 		
 		try (Connection conn = ConnectionUtil.getConnection()){
 			
-			String sql = "SELECT * FROM users WHERE username = ?";
+			String sql = "SELECT * FROM users WHERE username = ?;";
 			
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			
@@ -182,7 +182,7 @@ public class UserDao implements IUserDao{
 			Statement stmt = conn.createStatement();
 			
 			// Let's create our SQL query
-			String sql = "SELECT * FROM users where user_role = Role.Customer";
+			String sql = "SELECT * FROM users where user_role = Role.Customer;";
 			
 			// We'll return all of the data queried so we need a ResultSet obj to iterate over it
 			ResultSet rs = stmt.executeQuery(sql);

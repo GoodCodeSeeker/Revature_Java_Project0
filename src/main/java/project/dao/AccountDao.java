@@ -19,14 +19,14 @@ public class AccountDao implements IAccountDao{
 		try (Connection conn = ConnectionUtil.getConnection()){
 			
 			//Insert account with the account owner id
-			String sql = "insert into accounts(balance, accowner, active) VALUES (0, ?, FALSE)";
+			String sql = "insert into accounts(balance, accowner, active) VALUES (0, ?, FALSE);";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, ownerId);
 			stmt.executeUpdate();
 			ResultSet rs = stmt.executeQuery(sql);
 			
 			if ((rs = stmt.executeQuery()) != null) {
-				String sql2 = "insert into user_accounts_jt (acc_owner, account) values (?, ?)";
+				String sql2 = "insert into user_accounts_jt (acc_owner, account) values (?, ?);";
 						PreparedStatement stmt2= conn.prepareStatement(sql2);
 			int a_id = rs.getInt(1);
 			int a_owner = rs.getInt(3);
@@ -276,7 +276,7 @@ public class AccountDao implements IAccountDao{
 	public void delete(int id) {
 		try (Connection conn = ConnectionUtil.getConnection()){
 		
-		String sql = "delete from user_account_jt where account = ?";
+		String sql = "delete from user_account_jt where account = ?;";
 		String sql2 = "delete from accounts where id = ? cascade;";
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		PreparedStatement stmt2 = conn.prepareStatement(sql2);
