@@ -51,12 +51,17 @@ public class AccountService {
 	}
 	
 	
-	public void viewAccountsById(int id) {
+	public void viewAccountsByOwnerId(int id) {
 		logger.info("The accounts owned by user id: " + id);
 		List<Account> accList = adao.findByOwner(id);
 		for (Account a: accList) {
 			System.out.println(a);
 		}
+	}
+	
+	public void viewAccountbyId(int id) {
+		Account a = adao.findById(id);
+		System.out.println(a.toString());
 	}
 	
 	public void makeAccount(int id) {

@@ -30,8 +30,7 @@ import project.util.ConnectionUtil;
 			//ConnectionUtil.getConnection();
 			
 			//ConnectionUtil.getConnection();
-			
-			
+
 		}
 		
 		public static void run() {
@@ -141,7 +140,7 @@ import project.util.ConnectionUtil;
 		switch (choice1) {
 			case 1: System.out.println("You can view accounts that you own.");
 			int input = u.getId();
-			as.viewAccountsById(input);
+			as.viewAccountsByOwnerId(input);
 			System.out.println("Press 1 to continue, other key to exit.");
 			continueFlag = scan.next();
 			break;
@@ -161,12 +160,11 @@ import project.util.ConnectionUtil;
 				int choice2 = 0;
 
 				do {
-				
 				System.out.println("Choose the account id to do banking");
 				accNum = scan.nextInt();
 				as.validateAccountId(accNum, u.getId());
 				if (as.validateAccountId(accNum, u.getId()) == true) {
-				as.viewAccountsById(accNum);
+				as.viewAccountbyId(accNum);
 				System.out.println("Press 1 to Deposit."
 						+ "Press 2 to withdraw."
 						+ "Press 3 to transfer.");
