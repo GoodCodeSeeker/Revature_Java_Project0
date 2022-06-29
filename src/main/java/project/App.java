@@ -177,6 +177,7 @@ import project.util.ConnectionUtil;
 				amount = scan.nextDouble();
 				System.out.println("Depositing $" + amount);
 				as.depositService(accNum, amount);
+				as.viewAccountbyId(accNum);
 				System.out.println("Press 1 to continue, other key to exit.");
 				continueFlag = scan.next();
 				break;
@@ -185,6 +186,7 @@ import project.util.ConnectionUtil;
 				amount = scan.nextDouble();
 				System.out.println("Withdrawing $" + amount);
 				as.withdrawService(accNum, amount);
+				as.viewAccountbyId(accNum);
 				System.out.println("Press 1 to continue, other key to exit.");
 				continueFlag = scan.next();
 				break;
@@ -197,6 +199,8 @@ import project.util.ConnectionUtil;
 				amount = scan.nextDouble();
 				System.out.println("Transfer $" + amount + " to account "+ tar);
 				as.transferService(accNum, tar, amount);
+				as.viewAccountbyId(accNum);
+				as.viewAccountbyId(tar);
 				System.out.println("Press 1 to continue, other key to exit.");
 				continueFlag = scan.next();
 				}else {
@@ -210,7 +214,7 @@ import project.util.ConnectionUtil;
 				} else {
 					System.out.println("Entered the wrong account id.");
 				}
-				} while (as.validateAccountId(accNum, u.getId()) == false);
+				} while (as.validateAccountId(accNum, u.getId()) == false || continueFlag.equals("1"));
 			}
 			
 			break;

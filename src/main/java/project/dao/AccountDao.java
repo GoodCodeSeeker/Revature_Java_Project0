@@ -238,7 +238,7 @@ public class AccountDao implements IAccountDao{
 	
 	public void updateSubBalance(int id, double money) {
 		try (Connection conn = ConnectionUtil.getConnection()){
-		String sql = "update accounts set balance = balance - ? where acc_owner = ?;";
+		String sql = "update accounts set balance = balance - ? where id = ?;";
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		stmt.setDouble(1, money);
 		stmt.setInt(2, id);
